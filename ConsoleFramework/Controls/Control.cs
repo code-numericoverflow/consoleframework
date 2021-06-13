@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using ConsoleFramework.Core;
 using ConsoleFramework.Events;
 using ConsoleFramework.Native;
 using ConsoleFramework.Rendering;
+using Xaml;
 
 namespace ConsoleFramework.Controls
 {
@@ -77,10 +77,17 @@ namespace ConsoleFramework.Controls
             this.validity = LayoutValidity.Nothing;
         }
 
+        // All members except 'validity'
         public bool Equals(LayoutInfo other) {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return other.measureArgument.Equals(measureArgument) && other.unclippedDesiredSize.Equals(unclippedDesiredSize) && other.desiredSize.Equals(desiredSize) && other.renderSlotRect.Equals(renderSlotRect) && other.renderSize.Equals(renderSize) && other.layoutClip.Equals(layoutClip) && other.actualOffset.Equals(actualOffset);
+            return other.measureArgument.Equals(measureArgument)
+                   && other.unclippedDesiredSize.Equals(unclippedDesiredSize)
+                   && other.desiredSize.Equals(desiredSize)
+                   && other.renderSlotRect.Equals(renderSlotRect)
+                   && other.renderSize.Equals(renderSize)
+                   && other.layoutClip.Equals(layoutClip)
+                   && other.actualOffset.Equals(actualOffset);
         }
 
         public override bool Equals(object obj) {
@@ -94,6 +101,7 @@ namespace ConsoleFramework.Controls
     /// <summary>
     /// Base class for all controls.
     /// </summary>
+    //[DataContextProperty("DataContext")]
     public partial class Control : INotifyPropertyChanged {
 
         /// <summary>
@@ -136,48 +144,48 @@ namespace ConsoleFramework.Controls
         public static RoutedEvent GotKeyboardFocusEvent = EventManager.RegisterRoutedEvent("GotKeyboardFocus", RoutingStrategy.Bubble, typeof(KeyboardFocusChangedEventHandler), typeof(Control));
 
         public event MouseEventHandler MouseMove {
-            add { AddHandler(MouseMoveEvent, value); }
-            remove { RemoveHandler(MouseMoveEvent, value); }
+            add => AddHandler(MouseMoveEvent, value);
+            remove => RemoveHandler(MouseMoveEvent, value);
         }
 
         public event MouseButtonEventHandler MouseDown {
-            add { AddHandler(MouseDownEvent, value); }
-            remove { RemoveHandler(MouseDownEvent, value); }
+            add => AddHandler(MouseDownEvent, value);
+            remove => RemoveHandler(MouseDownEvent, value);
         }
 
         public event MouseButtonEventHandler MouseUp {
-            add { AddHandler(MouseUpEvent, value); }
-            remove { RemoveHandler(MouseUpEvent, value); }
+            add => AddHandler(MouseUpEvent, value);
+            remove => RemoveHandler(MouseUpEvent, value);
         }
 
         public event MouseEventHandler MouseEnter {
-            add { AddHandler(MouseEnterEvent, value); }
-            remove { RemoveHandler(MouseEnterEvent, value); }
+            add => AddHandler(MouseEnterEvent, value);
+            remove => RemoveHandler(MouseEnterEvent, value);
         }
 
         public event MouseEventHandler MouseLeave {
-            add { AddHandler(MouseLeaveEvent, value); }
-            remove { RemoveHandler(MouseLeaveEvent, value); }
+            add => AddHandler(MouseLeaveEvent, value);
+            remove => RemoveHandler(MouseLeaveEvent, value);
         }
 
         public event KeyEventHandler KeyDown {
-            add { AddHandler(KeyDownEvent, value); }
-            remove { RemoveHandler(KeyDownEvent, value); }
+            add => AddHandler(KeyDownEvent, value);
+            remove => RemoveHandler(KeyDownEvent, value);
         }
 
         public event KeyEventHandler KeyUp {
-            add { AddHandler(KeyUpEvent, value); }
-            remove { RemoveHandler(KeyUpEvent, value); }
+            add => AddHandler(KeyUpEvent, value);
+            remove => RemoveHandler(KeyUpEvent, value);
         }
 
         public event KeyboardFocusChangedEventHandler LostKeyboardFocus {
-            add { AddHandler(LostKeyboardFocusEvent, value); }
-            remove { RemoveHandler(LostKeyboardFocusEvent, value); }
+            add => AddHandler(LostKeyboardFocusEvent, value);
+            remove => RemoveHandler(LostKeyboardFocusEvent, value);
         }
 
         public event KeyboardFocusChangedEventHandler GotKeyboardFocus {
-            add { AddHandler(GotKeyboardFocusEvent, value); }
-            remove { RemoveHandler(GotKeyboardFocusEvent, value); }
+            add => AddHandler(GotKeyboardFocusEvent, value);
+            remove => RemoveHandler(GotKeyboardFocusEvent, value);
         }
 
 //        public void SetFocus() {
@@ -408,15 +416,12 @@ namespace ConsoleFramework.Controls
 
         public Control() {
             Children = children.AsReadOnly();
-            //MinWidth = 0;
+            MinWidth = 0;
             Focusable = false;
             IsFocusScope = false;
             Visibility = Visibility.Visible;
             AddHandler(GotKeyboardFocusEvent, new KeyboardFocusChangedEventHandler(Control_GotKeyboardFocus));
             AddHandler(LostKeyboardFocusEvent, new KeyboardFocusChangedEventHandler(Control_LostKeyboardFocus));
-            // todo : remove after issue https://github.com/sq/JSIL/issues/388 will be fixed
-            this.Width = null;
-            this.Height = null;
         }
         
         /// <summary>
@@ -482,39 +487,21 @@ namespace ConsoleFramework.Controls
         /// </summary>
         public event EventHandler LayoutRevalidated;
 
-        public int ActualWidth {
-            get {
-                return RenderSize.Width;
-            }
-        }
+        public int ActualWidth => RenderSize.Width;
 
-        public int ActualHeight {
-            get {
-                return RenderSize.Height;
-            }
-        }
+        public int ActualHeight => RenderSize.Height;
 
         public int MinWidth {
             get;
             set;
         }
 
-        private int maxWidth = int.MaxValue;
-        public int MaxWidth {
-            get {
-                return maxWidth;
-            }
-            set {
-                maxWidth = value;
-            }
-        }
+        public int MaxWidth { get; set; } = int.MaxValue;
 
         public int MinHeight {
             get;
             set;
         }
-
-        private int maxHeight = int.MaxValue;
 
         /// <summary>
         /// Shows whether control can handle keyboard input or can't.
@@ -538,14 +525,7 @@ namespace ConsoleFramework.Controls
         /// </summary>
         public bool IsFocusScope { get; set; }
 
-        public int MaxHeight {
-            get {
-                return maxHeight;
-            }
-            set {
-                maxHeight = value;
-            }
-        }
+        public int MaxHeight { get; set; } = int.MaxValue;
 
         public int? Width {
             get;
@@ -563,12 +543,8 @@ namespace ConsoleFramework.Controls
         }
 
         public Size DesiredSize {
-            get {
-                return layoutInfo.desiredSize;
-            }
-            private set {
-                layoutInfo.desiredSize = value;
-            }
+            get => layoutInfo.desiredSize;
+            private set => layoutInfo.desiredSize = value;
         }
 
         private struct MinMax
@@ -610,8 +586,57 @@ namespace ConsoleFramework.Controls
             internal readonly int maxHeight;
         }
 
+        /// <summary>
+        /// Get the sum of a and b, but
+        /// treats int.MaxValue as PositiveInf, and int.MinValue as NegativeInf
+        /// 
+        /// int.MaxValue + const = int.MaxValue
+        /// int.MinValue + const = int.MinValue
+        /// int.MaxValue + int.MaxValue = int.MaxValue
+        /// int.MaxValue + int.MinValue = Exception
+        /// </summary>
+        public static int SumWithInf(int a, int b) {
+            if (a == int.MaxValue || a == int.MinValue) {
+                assert(b != MinusWithInf(a));
+                return a;
+            }
+            if (b == int.MaxValue || b == int.MinValue) {
+                assert(a != MinusWithInf(b));
+                return a;
+            }
+            int result = a + b;
+            // Check case when sum transforms into one of the "special" values
+            assert(result != int.MinValue && result != int.MaxValue);
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the -v but treats int.MaxValue as PositiveInf and int.MinValue as NegativeInf respectively.
+        /// Throws exception if v == -int.MinValue (doesn't return int.MaxValue in this case)
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static int MinusWithInf(int v) {
+            switch (v) {
+                case int.MaxValue:
+                    return int.MinValue;
+                case int.MinValue:
+                    return int.MaxValue;
+                default:
+                    int result = -v;
+                    // Check case when -v transforms into one of the "special" values
+                    assert(result != int.MinValue && result != int.MaxValue);
+                    return result;
+            }
+        }
+
         public void Measure(Size availableSize) {
-            if (layoutInfo.validity != LayoutValidity.Nothing) return;
+            if (availableSize.Width < 0 || availableSize.Height < 0) {
+                throw new ArgumentException("Negative width/height is not allowed");
+            }
+            if (layoutInfo.validity != LayoutValidity.Nothing) {
+                return;
+            }
 
             layoutInfo.measureArgument = availableSize;
 
@@ -628,8 +653,8 @@ namespace ConsoleFramework.Controls
 
             //  parent size is what parent want us to be
             Size frameworkAvailableSize = new Size(
-                Math.Max(availableSize.Width - marginWidth, 0),
-                Math.Max(availableSize.Height - marginHeight, 0));
+                Math.Max(SumWithInf(availableSize.Width, -marginWidth), 0),
+                Math.Max(SumWithInf(availableSize.Height, -marginHeight), 0));
 
             // apply min/max/currentvalue constraints
             MinMax mm = new MinMax(MinHeight, MaxHeight, MinWidth, MaxWidth, Width, Height);
@@ -687,6 +712,10 @@ namespace ConsoleFramework.Controls
             layoutInfo.unclippedDesiredSize = unclippedDesiredSize;
 
             DesiredSize = new Size(Math.Max(0, clippedDesiredWidth), Math.Max(0, clippedDesiredHeight));
+
+            if (DesiredSize.Width == int.MaxValue || DesiredSize.Height == int.MaxValue) {
+                throw new Exception("Desired size cannot have int.MaxValue width/height");
+            }
         }
         
         /// <summary>
@@ -837,12 +866,8 @@ namespace ConsoleFramework.Controls
         /// отведенные методом Arrange. Контрол будет обрезан лайаут-системой в соответствии с RenderSlotRect.
         /// </summary>
         public Size RenderSize {
-            get {
-                return layoutInfo.renderSize;
-            }
-            private set {
-                layoutInfo.renderSize = value;
-            }
+            get => layoutInfo.renderSize;
+            private set => layoutInfo.renderSize = value;
         }
 
         /// <summary>
@@ -850,18 +875,28 @@ namespace ConsoleFramework.Controls
         /// Задается аргументом при вызове <see cref="Arrange"/>.
         /// </summary>
         public Rect RenderSlotRect {
-            get {
-                return layoutInfo.renderSlotRect;
-            }
-            private set {
-                layoutInfo.renderSlotRect = value;
-            }
+            get => layoutInfo.renderSlotRect;
+            private set => layoutInfo.renderSlotRect = value;
         }
 
         private Rect calculateLayoutClip() {
             Vector offset = computeAlignmentOffset();
             Size clientSize = getClientSize();
-            return new Rect(-offset.X, -offset.Y, clientSize.Width, clientSize.Height);
+            var layoutClip = new Rect(-offset.X, -offset.Y, clientSize.Width, clientSize.Height);
+            return applyMaxConstraints(layoutClip);
+        }
+
+        internal Rect applyMaxConstraints(Rect layoutClip) {
+            // Если указаны MaxWidth/Height ограничения, то из видимой части layoutClip
+            // оставляем в углу TopLeft только то, что влезает в Max. TopLeft выбран потому,
+            // что при вычислении в computeAlignmentOffset() мы уже подразумевали такой исход
+            // (см. комментарий внутри computeAlignmentOffset)
+            var visibleLayoutClip = Rect.Intersect(new Rect(RenderSize), layoutClip);
+            MinMax mm = new MinMax(MinHeight, MaxHeight, MinWidth, MaxWidth, Width, Height);
+            
+            return new Rect(visibleLayoutClip.TopLeft, new Size(
+                Math.Min(visibleLayoutClip.Width, mm.maxWidth),
+                Math.Min(visibleLayoutClip.Height, mm.maxHeight)));
         }
 
         /// <summary>
@@ -869,11 +904,7 @@ namespace ConsoleFramework.Controls
         /// Все остальное будет обрезано в соответствии с установленными значениями свойств
         /// <see cref="Margin"/>, <see cref="HorizontalAlignment"/> и <see cref="VerticalAlignment"/>.
         /// </summary>
-        public Rect LayoutClip {
-            get {
-                return layoutInfo.layoutClip;
-            }
-        }
+        public Rect LayoutClip => layoutInfo.layoutClip;
 
         private Vector computeAlignmentOffset() {
             //
@@ -908,7 +939,7 @@ namespace ConsoleFramework.Controls
                             Math.Max(0, renderSlotRect.Height - marginHeight));
         }
 
-        private Vector computeAlignmentOffsetCore(Size clientSize, Size inkSize) {
+        internal Vector computeAlignmentOffsetCore(Size clientSize, Size inkSize) {
             Vector offset = new Vector();
 
             HorizontalAlignment ha = HorizontalAlignment;
@@ -1038,36 +1069,33 @@ namespace ConsoleFramework.Controls
         /// <param name="dest">Контрол, относительно которого необходимо вычислить координаты точки.</param>
         /// <returns></returns>
         public static Point TranslatePoint(Control source, Point point, Control dest) {
-            // todo : remove unnecessary copying after fixing
-            // https://github.com/sq/JSIL/issues/395
-            Point pointCopy = point;
             if (source == null || dest == null) {
                 if (source == null && dest != null) {
                     // translating raw point (absolute coords) into relative to dest control point
                     Control currentControl = dest;
                     for (;;) {
                         Vector actualOffset = currentControl.ActualOffset;
-                        pointCopy.Offset(-actualOffset.X, -actualOffset.y);
+                        point.Offset(-actualOffset.X, -actualOffset.y);
                         if (currentControl.Parent == null) {
                             break;
                         }
                         currentControl = currentControl.Parent;
                     }
-                    return pointCopy;
+                    return point;
                 } else if (source != null && dest == null) {
                     // translating point relative to source into absolute coords
                     Control currentControl = source;
                     for (;;) {
                         Vector actualOffset = currentControl.ActualOffset;
-                        pointCopy.Offset(actualOffset.X, actualOffset.y);
+                        point.Offset(actualOffset.X, actualOffset.y);
                         if (currentControl.Parent == null)
                             break;
                         currentControl = currentControl.Parent;
                     }
-                    return pointCopy;
+                    return point;
                 } else {
                     // both source and dest are null - we shouldn't to do anything
-                    return pointCopy;
+                    return point;
                 }
             } else {
                 // find common ancestor
@@ -1076,17 +1104,17 @@ namespace ConsoleFramework.Controls
                 Control currentControl = source;
                 while (currentControl != ancestor) {
                     Vector actualOffset = currentControl.ActualOffset;
-                    pointCopy.Offset(actualOffset.X, actualOffset.y);
+                    point.Offset(actualOffset.X, actualOffset.y);
                     currentControl = currentControl.Parent;
                 }
                 // traverse back from dest to common ancestor
                 currentControl = dest;
                 while (currentControl != ancestor) {
                     Vector actualOffset = currentControl.ActualOffset;
-                    pointCopy.Offset(-actualOffset.X, -actualOffset.y);
+                    point.Offset(-actualOffset.X, -actualOffset.y);
                     currentControl = currentControl.Parent;
                 }
-                return pointCopy;
+                return point;
             }
         }
 
@@ -1261,9 +1289,7 @@ namespace ConsoleFramework.Controls
 
         private Point cursorPosition = new Point(0, 0);
         internal Point CursorPosition {
-            get {
-                return cursorPosition;
-            }
+            get => cursorPosition;
             set {
                 if (cursorPosition != value) {
                     cursorPosition = value;
@@ -1311,8 +1337,7 @@ namespace ConsoleFramework.Controls
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void RaisePropertyChanged( string propertyName ) {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if ( handler != null ) handler( this, new PropertyChangedEventArgs( propertyName ) );
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         protected static void assert( bool assertion ) {
@@ -1365,10 +1390,6 @@ namespace ConsoleFramework.Controls
         protected virtual void OnCreated( ) {
         }
 
-        private ContextMenu contextMenu;
-        public ContextMenu ContextMenu {
-            get { return contextMenu; }
-            set { contextMenu = value; }
-        }
+        public ContextMenu ContextMenu { get; set; }
     }
 }

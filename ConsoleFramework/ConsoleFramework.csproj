@@ -69,9 +69,11 @@
     <Compile Include="Controls\MessageBox.cs" />
     <Compile Include="Controls\ProgressBar.cs" />
     <Compile Include="Controls\RadioButton.cs" />
+    <Compile Include="Controls\ScrollBar.cs" />
     <Compile Include="Controls\ScrollViewer.cs" />
     <Compile Include="Controls\TabControl.cs" />
     <Compile Include="Controls\TextBox.cs" />
+    <Compile Include="Controls\TextEditor.cs" />
     <Compile Include="Controls\TreeView.cs" />
     <Compile Include="Controls\UIElementCollection.cs" />
     <Compile Include="Core\ThicknessConverter.cs" />
