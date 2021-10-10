@@ -72,3 +72,4 @@ Standard terminal emulator is not very good for console applications deals with 
 [MacPorts]:http://www.macports.org/
 [ITerm2]:http://www.iterm2.com/#/section/home
 [http://elwood.su/2014/02/console-framework-on-mac/]:http://elwood.su/2014/02/console-framework-on-mac/
+
